@@ -1,6 +1,6 @@
 import pandas as pd
 
-import openai
+# import openai
 # # import key
 import pprint
 # import json

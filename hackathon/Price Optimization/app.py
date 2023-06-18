@@ -62,7 +62,7 @@ app.layout = html.Div(
                         html.Div(
                             className="padding-top-bot",
                             children=[
-                                html.H6("OPTIMIZE"),
+                                html.H6("OPTIMIZE", style={"text-align": "center"}),
                                 dcc.Dropdown(
                                     id="selected-var-opt",
                                     options=[
@@ -80,7 +80,7 @@ app.layout = html.Div(
                         html.Div(
                             className="padding-top-bot",
                             children=[
-                                html.H6("OPTIMIZATION RANGE"),
+                                html.H6("OPTIMIZATION RANGE", style={"text-align": "center"}),
                                 html.Div(id="output-container-range-slider"),
                                 dcc.RangeSlider(
                                     id="my-range-slider",
@@ -95,8 +95,9 @@ app.layout = html.Div(
                         html.Br(),
                         html.Div(
                             className="padding-top-bot",
+                            style={"display": "flex", "justifyContent": "center", "alignItems": "center", "flex-direction": "column"},
                             children=[
-                                html.H6("FIXED COST"),
+                                html.H6("FIXED COST", style={"text-align": "center"}),
                                 daq.NumericInput(
                                     id='selected-cost-opt',
                                     min=0,
@@ -108,9 +109,9 @@ app.layout = html.Div(
                         html.Br(),
                         html.Br(),
                         html.Br(),
-                        html.H6("RECOMMENDATION:"),
+                        html.H6("RECOMMENDATION:", style={"text-align": "center"}),
                         html.Div(
-                            id='id-insights', style={'color': 'DarkCyan', 'fontSize': 15}
+                            id='id-insights', className="pretty_container", style={'color': 'DarkCyan', 'fontSize': 15}
                         ),
                         # html.Br(),
                         # html.Div(dbc.Button("GET CODE", color="primary", className="mr-1", href="https://github.com/amitvkulkarni/Data-Apps/tree/main/Price%20Optimization", target='_blank')),
@@ -162,7 +163,7 @@ app.layout = html.Div(
                         html.Div(
                             className="padding-top-bot",
                             children=[
-                                html.H6("SIMULATED RESULT"),
+                                html.H6("SIMULATED RESULT", style={"text-align": "center"}),
                                 dash_table.DataTable(
                                     id='heatmap',
                                     columns=[
@@ -204,7 +205,7 @@ app.layout = html.Div(
             className="padding-top-bot",
             children=[
                 html.H6("SENTIMENT ANALYSIS"),
-                html.Div(id="text-display", style={'color': 'DarkCyan', 'fontSize': 15}),
+                html.Div(id="text-display", className="pretty_container", style={'color': 'DarkCyan', 'fontSize': 15}),
             ],
         )
     ],
@@ -218,6 +219,7 @@ html.Div(
                         html.H6("PRICING STRATEGY"),
                         html.Div(
                             id="texts-display",
+                            className="pretty_container",
                             style={'color': 'DarkCyan', 'fontSize': 15}
                         ),
                         html.Div(
@@ -249,9 +251,9 @@ html.Div(
             children=[
                 html.Div(
                     className="pretty_container",
-                    style={'display': 'inline-block', 'paddingRight': '10px'},
+                    style={'display': 'inline-block'},
                     children=[
-                        html.H6("COMPETITOR PRICES"),
+                        html.H6("COMPETITOR PRICES", style={"text-align": "center"}),
                         dash_table.DataTable(
                             id='competitor-prices-table',
                             columns=[
@@ -284,11 +286,13 @@ html.Div(
                 ),
                 html.Div(
                     className="pretty_container",
-                    style={'display': 'inline-block', 'paddingLeft': '10px'},
+                    style={'paddingLeft': '10px'},
                     children=[
+                        # html.H6("COMPETITOR PRICES GRAPH", style={"text-align": "center"}),
                         dcc.Graph(id="competitor-prices-graph"),
                     ]
-                )
+                ),
+                
             ],
         )
     ],
@@ -321,6 +325,8 @@ def update_output(value):
     return "{}".format(value)
 
 
+
+
 @app.callback(
     Output("texts-display", "children"),
     [Input("selected-var-opt", "value"),
@@ -328,7 +334,7 @@ def update_output(value):
      Input("selected-cost-opt", "value"),
      Input("strategy-options", "value")]
 )
-def update_sentiment(var_opt, var_range, var_cost, strategy_options):
+def update_pricing_strategy(var_opt, var_range, var_cost, strategy_options):
     with open('overall_sentiment.txt', 'r') as file:
         sentiment_string = file.read()
     # sentiment_string = Python.sentiment.get_overall_sentiment()
@@ -339,7 +345,7 @@ def update_sentiment(var_opt, var_range, var_cost, strategy_options):
     recommendations = []
 
     if strategy_options == 'positive' and overall_sentiment == "Positive":
-        recommendations.append(f"Since the consumer views this product in a {overall_sentiment} light, we recommend increasing the price by 5%.")
+        recommendations.append(f"Based on the majority positive sentiment received from the target audience, a pricing strategy for the product could be to consider increasing the price slightly. This strategy is based on the positive perception of the product, indicating that the target audience values the product and is willing to pay a higher price for it. \n Increasing the price can help position the product as premium or high-quality in the market. It can also create a perception of exclusivity and uniqueness, which can attract customers who associate higher prices with superior value.")
 
     if strategy_options == 'neutral' and overall_sentiment == "Neutral":
         recommendations.append(f"Since the consumer views this product in a {overall_sentiment} light, we recommend keeping the price the same to test waters.")
@@ -351,8 +357,8 @@ def update_sentiment(var_opt, var_range, var_cost, strategy_options):
         recommendations.append("No matching recommendations found.")
 
     return [
-        html.P(f"Target audience's perception towards the product: {overall_sentiment}"),
-        html.Div([html.P(rec) for rec in recommendations]),
+        f"Target audience's perception towards the product: {overall_sentiment}",
+        html.Div([rec for rec in recommendations]),
     ]
 
 @app.callback(
@@ -373,7 +379,7 @@ def update_competitor_prices(selected_price_range):
     competitor_prices_graph.update_layout(
         xaxis=dict(title='Quarter'),
         yaxis=dict(title='Competitor Price'),
-        title='Competitor Prices Comparison',
+        title='',
         showlegend=True,
         legend=dict(title='Year'),
         hovermode='x unified'
@@ -427,6 +433,7 @@ def update_output_All(var_opt, var_range, var_cost):
     except Exception as e:
         logging.exception(str(e))
         return [dash.no_update, dash.no_update, dash.no_update, "Please provide valid inputs."]
+
 
 
 if __name__ == "__main__":

@@ -8,4 +8,4 @@ It is built on existing practices in the industry with some additional key featu
 
 
 
-This app is also a build up or extension to the pre-existing application found on this [GitHub page](https://github.com/amitvkulkarni/Data-Apps/tree/main/Price%20Optimization) and [article](https://www.analyticsvidhya.com/blog/2021/08/build-a-price-recommender-app-with-python/).
+This app is also built on or is an extension of the pre-existing application found on this [GitHub page](https://github.com/amitvkulkarni/Data-Apps/tree/main/Price%20Optimization) and [article](https://www.analyticsvidhya.com/blog/2021/08/build-a-price-recommender-app-with-python/).
